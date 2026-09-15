@@ -31,4 +31,10 @@ public class Login {
         boolean hasSpecial  = password.matches(".*[^a-zA-Z0-9].*");
         return hasUpper &&hasDigit && hasSpecial;
     }
+    public boolean ChceakCellPhone(String cellphone){
+        if (cellphone == null){
+            return false;
+        }
+        return cellphone.matches("^\\+27\\d{9}$");
+    }
 }
