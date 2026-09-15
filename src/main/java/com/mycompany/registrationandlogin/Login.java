@@ -22,4 +22,13 @@ public class Login {
         }
         return username.contains("_") && username.length() <=5;
     }
+    public boolean CheckPasswordComplexity(String password){
+        if (password == null || password.length() <8){
+            return false;
+        }
+        boolean hasUpper  =password.matches(".*[A-Z].*");
+        boolean hasDigit  = password.matches(".*\\d.*");
+        boolean hasSpecial  = password.matches(".*[^a-zA-Z0-9].*");
+        return hasUpper &&hasDigit && hasSpecial;
+    }
 }
