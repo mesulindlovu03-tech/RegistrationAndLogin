@@ -13,7 +13,7 @@ public class Login {
     private String StoredPassword;
     private String StoredCellPhone;
     private String StoredFirstname;
-    private String StroredLastName;
+    private String StoredLastName;
     private boolean isRegistered = false;
     
     public boolean CheckUserName(String username){
@@ -51,7 +51,7 @@ public class Login {
           this.StoredPassword = password;
           this.StoredCellPhone = cellphone;
           this.StoredFirstname = firstname;
-          this.StroredLastName = lastname;
+          this.StoredLastName = lastname;
           this.isRegistered = true;
           
           return "registration successful";
@@ -62,5 +62,10 @@ public class Login {
         }
         return username.equals(StoredUsername) && password.equals(StoredPassword);
     }
-    
+    public String ReturnLoginStatus(String username, String password){
+        if (LoginUser(username, password)){
+            return "Welcome"+StoredFirstname +","+ StoredLastName + "it is great to see you.";
+        }
+        return "Username or password incorrect, please try again";
+    }
 }
