@@ -31,10 +31,36 @@ public class Login {
         boolean hasSpecial  = password.matches(".*[^a-zA-Z0-9].*");
         return hasUpper &&hasDigit && hasSpecial;
     }
-    public boolean ChceakCellPhone(String cellphone){
+    public boolean CheckCellPhone(String cellphone){
         if (cellphone == null){
             return false;
         }
         return cellphone.matches("^\\+27\\d{9}$");
     }
+    public String RegisterUser(String username, String password, String cellphone,String firstname, String cellphone, String lastname){
+        if (!CheckUserName(username)){
+            return "Username is not correctly formatted; please ensure that your username contains an underscore and is no more than five character in length.";
+        }
+         if (!CheckPasswordComplexity(password)){
+            return "Password is not correctly formatted; please ensure that your password contains at least eight characters,capital letter, a number, and a special character.";
+        }
+          if (!CheckCellPhone(cellphone)){
+            return "Cellphone number is not correctly formatted or does not cotain an international code; please correct the number and try again.";
+        }
+          this.StoredUsername = username;
+          this.StoredPassword = password;
+          this.StoredCellPhone = cellphone;
+          this.StoredFirstname = firstname;
+          this.StroredLastName = lastname;
+          this.isRegistered = true;
+          
+          return "registration successful";
+    }
+    public boolean LoginUser (String username, String password){
+        if (!isRegistered){
+            return false;
+        }
+        return username.equals(StoredUsername) && password.equals(StoredPassword);
+    }
+    
 }
