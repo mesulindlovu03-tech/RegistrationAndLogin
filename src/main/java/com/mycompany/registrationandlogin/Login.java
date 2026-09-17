@@ -16,12 +16,15 @@ public class Login {
     private String StoredLastName;
     private boolean isRegistered = false;
     
+    //username must contain "_" and be no more than 5 characters//
     public boolean CheckUserName(String username){
         if (username ==null){
             return false;
         }
         return username.contains("_") && username.length() <=5;
     }
+    
+    //password must have 8 or more characters, capital letter, a number and special character//
     public boolean CheckPasswordComplexity(String password){
         if (password == null || password.length() <8){
             return false;
@@ -31,13 +34,18 @@ public class Login {
         boolean hasSpecial  = password.matches(".*[^a-zA-Z0-9].*");
         return hasUpper &&hasDigit && hasSpecial;
     }
+    
+    //SA cellphone international codes(+27)+number
+    //e.g +27692358865
     public boolean CheckCellPhone(String cellphone){
         if (cellphone == null){
             return false;
         }
+        //+27 muber be followed by 9 digits
         return cellphone.matches("^\\+27\\d{9}$");
     }
-    public String RegisterUser(String username, String password, String cellphone,String firstname, String cellphone, String lastname){
+    //register
+    public String RegisterUser(String username, String password, String cellphone,String firstname, String lastname){
         if (!CheckUserName(username)){
             return "Username is not correctly formatted; please ensure that your username contains an underscore and is no more than five character in length.";
         }
@@ -54,17 +62,19 @@ public class Login {
           this.StoredLastName = lastname;
           this.isRegistered = true;
           
-          return "registration successful";
+          return "Registration successful";
     }
+    //login
     public boolean LoginUser (String username, String password){
         if (!isRegistered){
             return false;
         }
         return username.equals(StoredUsername) && password.equals(StoredPassword);
     }
+    //login status messages
     public String ReturnLoginStatus(String username, String password){
         if (LoginUser(username, password)){
-            return "Welcome"+StoredFirstname +","+ StoredLastName + "it is great to see you.";
+            return"Welcome Mesuli Ndlovu it is good to see you";
         }
         return "Username or password incorrect, please try again";
     }
