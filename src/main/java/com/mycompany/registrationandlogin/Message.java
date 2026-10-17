@@ -35,14 +35,7 @@ public class Message {
         this.messageText = messageText;
         this.messageHash = createMessageHash();
     }
-
-    // Format: first two ID digits : message number : FIRSTWORDLASTWORD (all caps)
-    public String createMessageHash() {
-        String[] words = messageText.trim().split("\\s+");
-        String first = words[0].replaceAll("[^A-Za-z0-9]", "");
-        String last = words[words.length - 1].replaceAll("[^A-Za-z0-9]", "");
-        return (messageId.substring(0, 2) + ":" + messageNumber + ":" + first + last).toUpperCase();
-    }
+    
     // Random 10-digit number (leading zeros allowed)
     private static String generateId() {
         long n = ThreadLocalRandom.current().nextLong(10_000_000_000L);
@@ -70,4 +63,19 @@ public class Message {
     public String getRecipient() { return recipient; }
     public String getMessageText() { return messageText; }
     
+    public String checkMessageLength() {
+        int length = messageText.length();
+        if (length <= 250) {
+            return "Message ready to send.";
+        }
+        return "Message exceeds 250 characters by " + (length - 250) + "; please reduce the size.";
+    }
+
+    // Format: first two ID digits : message number : FIRSTWORDLASTWORD (all caps)
+    public String createMessageHash() {
+        String[] words = messageText.trim().split("\\s+");
+        String first = words[0].replaceAll("[^A-Za-z0-9]", "");
+        String last = words[words.length - 1].replaceAll("[^A-Za-z0-9]", "");
+        return (messageId.substring(0, 2) + ":" + messageNumber + ":" + first + last).toUpperCase();
+    }
 }
