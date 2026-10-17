@@ -78,4 +78,47 @@ public class Message {
         String last = words[words.length - 1].replaceAll("[^A-Za-z0-9]", "");
         return (messageId.substring(0, 2) + ":" + messageNumber + ":" + first + last).toUpperCase();
     }
+    
+    // choice: 1 = send, 2 = disregard, 3 = store
+    public String SentMessage(int choice) {
+        switch (choice) {
+            case 1:
+                sentMessages.add(this);
+                totalSent++;
+                return "Message successfully sent.";
+            case 2:
+                return "Press 0 to delete the message.";
+            case 3:
+                storeMessage();
+                return "Message successfully stored.";
+            default:
+                return "Invalid option.";
+        }
+    }
+
+    public static String printMessages() {
+        StringBuilder sb = new StringBuilder();
+        for (Message m : sentMessages) {
+            sb.append("Message ID: ").append(m.messageId).append("\n")
+              .append("Message Hash: ").append(m.messageHash).append("\n")
+              .append("Recipient: ").append(m.recipient).append("\n")
+              .append("Message: ").append(m.messageText).append("\n\n");
+        }
+        return sb.toString();
+    }
+
+    public static int returnTotalMessages() {
+        return totalSent;
+    }
+
+    // Lets tests start from a clean slate
+    public static void resetAll() {
+        sentMessages.clear();
+        storedMessages.clear();
+        totalSent = 0;
+    }
+
+    private void storeMessage() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }
