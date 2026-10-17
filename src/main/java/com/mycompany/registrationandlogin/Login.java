@@ -78,4 +78,8 @@ public class Login {
         }
         return "Username or password incorrect, please try again";
     }
+
+    String RegisterUser(String username, String password, String cellphone, String firstname, String cellphone0, String lastname) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }
