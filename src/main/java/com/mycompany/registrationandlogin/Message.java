@@ -5,6 +5,10 @@
 package com.mycompany.registrationandlogin;
 import java.util.ArrayList;
 import java. util.concurrent.ThreadLocalRandom;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import java.io.FileWriter;
+import java.io.IOException;
 /**
  *
  * @author Student
@@ -118,7 +122,15 @@ public class Message {
         totalSent = 0;
     }
 
-    private void storeMessage() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    // JSON storage approach based on the Gson user guide:
+    // https://github.com/google/gson/blob/main/UserGuide.md
+    public void storeMessage() {
+        storedMessages.add(this);
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        try (FileWriter writer = new FileWriter("messages.json")) {
+            gson.toJson(storedMessages, writer);
+        } catch (IOException e) {
+            System.out.println("Could not save messages: " + e.getMessage());
+        }
     }
 }
