@@ -101,5 +101,98 @@ public class MessageTest {
     @Test
     public void testSomeMethod() {
     }
+   
+    private Message makeMessage() {
+        return new Message("2900000002", 2, "+27831234567", "+27838884567",
+                "Where are you? You are late! I have asked you to be on time.");
+    }
     
+    @Test
+    void messageIdHasTenCharacters() {
+        assertTrue(makeMessage().checkMessageId());
+        assertEquals(10, Message.generateMessageId().length());
+    }
+
+    @Test
+    void messageHashIsCreatedCorrectly() {
+        assertEquals("29:2:WHERETIME.", makeMessage().getMessageHash());
+    }
+
+    @Test
+    void oneWordMessageHash() {
+        Message m = new Message("1234567890", 1, "+27831234567", "+27838884567", "Hi");
+        assertEquals("12:1:HIHI", m.getMessageHash());
+    }
+
+    @Test
+    void recipientIsChecked() {
+        assertEquals("Recipient accepted.", Message.checkRecipient("+27834557896"));
+        assertEquals("Recipient must start with +27 and have 9 digits after it.", Message.checkRecipient("0838884567"));
+        assertEquals("Recipient must start with +27 and have 9 digits after it.", Message.checkRecipient("+2783455789A"));
+    }
+
+    @Test
+    void messageLengthIsChecked() {
+        assertEquals("Message accepted.", Message.checkText("Did you get the cake?"));
+        assertEquals("Message is 5 characters too long.", Message.checkText("x".repeat(255)));
+    }
+
+    @Test
+    void processMessageSetsTheFlag() {
+        Message m = makeMessage();
+        assertEquals("Message sent.", m.processMessage(1));
+        assertEquals("Sent", m.getFlag());
+        assertEquals("Message disregarded.", m.processMessage(2));
+        assertEquals("Disregard", m.getFlag());
+        assertEquals("Message stored.", m.processMessage(3));
+        assertEquals("Stored", m.getFlag());
+        assertEquals("Invalid option.", m.processMessage(9));
+    }
+    
+    private Message makeMessages() {
+        return new Message("2900000002", 2, "+27831234567", "+27838884567",
+                "Where are you? You are late! I have asked you to be on time.");
+    }
+
+    @Test
+    void MessageIdHasTenCharacters() {
+        assertTrue(makeMessage().checkMessageId());
+        assertEquals(10, Message.generateMessageId().length());
+    }
+
+    @Test
+    void MessageHashIsCreatedCorrectly() {
+        assertEquals("29:2:WHERETIME.", makeMessage().getMessageHash());
+    }
+
+    @Test
+    void OneWordMessageHash() {
+        Message m = new Message("1234567890", 1, "+27831234567", "+27838884567", "Hi");
+        assertEquals("12:1:HIHI", m.getMessageHash());
+    }
+
+    @Test
+    void RecipientIsChecked() {
+        assertEquals("Recipient accepted.", Message.checkRecipient("+27834557896"));
+        assertEquals("Recipient must start with +27 and have 9 digits after it.", Message.checkRecipient("0838884567"));
+        assertEquals("Recipient must start with +27 and have 9 digits after it.", Message.checkRecipient("+2783455789A"));
+    }
+
+    @Test
+    void MessageLengthIsChecked() {
+        assertEquals("Message accepted.", Message.checkText("Did you get the cake?"));
+        assertEquals("Message is 5 characters too long.", Message.checkText("x".repeat(255)));
+    }
+
+    @Test
+    void ProcessMessageSetsTheFlag() {
+        Message m = makeMessage();
+        assertEquals("Message sent.", m.processMessage(1));
+        assertEquals("Sent", m.getFlag());
+        assertEquals("Message disregarded.", m.processMessage(2));
+        assertEquals("Disregard", m.getFlag());
+        assertEquals("Message stored.", m.processMessage(3));
+        assertEquals("Stored", m.getFlag());
+        assertEquals("Invalid option.", m.processMessage(9));
+    }
 }
