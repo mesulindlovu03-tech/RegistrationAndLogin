@@ -5,6 +5,7 @@
 package com.mycompany.registrationandlogin;
 
 import com.google.gson.Gson;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -165,6 +166,79 @@ public class MessageDepot {
             return "No messages found for " + recipient + ".";
         }
         return result;
+    }
+    
+    // e) Delete a stored message using its hash
+    public String deleteByHash(String hash) {
+        // Step 1: find the index of the stored message with this hash
+        int deleteIndex = -1;
+        for (int i = 0; i < totalCount; i++) {
+            if (messageHashes[i].equals(hash) && messageFlags[i].equals("Stored")) {
+                deleteIndex = i;
+                break;
+            }
+        }
+        if (deleteIndex == -1) {
+            return "Message hash " + hash + " not found.";
+        }
+
+        String deleted = messageTexts[deleteIndex];
+
+        // Step 2: work out the same message's position in the stored array
+        int storedIndex = 0;
+        for (int i = 0; i < deleteIndex; i++) {
+            if (messageFlags[i].equals("Stored")) {
+                storedIndex++;
+            }
+        }
+
+        // Step 3: shift everything after it one place left, in EVERY array
+        removeAt(messageIds, deleteIndex, totalCount);
+        removeAt(messageHashes, deleteIndex, totalCount);
+        removeAt(messageSenders, deleteIndex, totalCount);
+        removeAt(messageRecipients, deleteIndex, totalCount);
+        removeAt(messageTexts, deleteIndex, totalCount);
+        removeAt(messageFlags, deleteIndex, totalCount);
+        totalCount--;
+
+        removeAt(storedMessages, storedIndex, storedCount);
+        storedCount--;
+
+        return "Message: \"" + deleted + "\" successfully deleted.";
+    }
+
+    // Shifts everything after 'index' one place left and clears the old last slot
+    private void removeAt(String[] array, int index, int count) {
+        for (int i = index; i < count - 1; i++) {
+            array[i] = array[i + 1];
+        }
+        array[count - 1] = null;
+    }
+
+    // Also removes the message from the JSON file so it does not come back next time
+    public String removeStoredFromJson(String fileName, String hash) {
+        Gson gson = new Gson();
+        try {
+            List<String> lines = Files.readAllLines(Paths.get(fileName));
+            FileWriter writer = new FileWriter(fileName);   // overwrite the file
+            boolean removed = false;
+            for (int i = 0; i < lines.size(); i++) {
+                String line = lines.get(i).trim();
+                if (line.equals("")) {
+                    continue;
+                }
+                Message m = gson.fromJson(line, Message.class);
+                if (!removed && m.getMessageHash().equals(hash)) {
+                    removed = true;                          // skip this one line
+                } else {
+                    writer.write(line + "\n");
+                }
+            }
+            writer.close();
+            return "Stored file updated.";
+        } catch (IOException e) {
+            return "Could not update the stored file.";
+        }
     }
     
 }
