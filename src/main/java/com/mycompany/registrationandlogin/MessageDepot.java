@@ -124,5 +124,47 @@ public class MessageDepot {
         return longest;
     }
     
+    // c) Search for a message by its ID: returns just the message text
+    public String findMessageById(String id) {
+        int index = indexOfId(id);
+        if (index == -1) {
+            return "Message ID " + id + " not found.";
+        }
+        return messageTexts[index];
+    }
+
+    // c) ...the same search, shown as recipient + message
+    public String searchById(String id) {
+        int index = indexOfId(id);
+        if (index == -1) {
+            return "Message ID " + id + " not found.";
+        }
+        return "Recipient: " + messageRecipients[index] + " | Message: " + messageTexts[index];
+    }
+
+    // Finds the index of a message ID in the parallel arrays (-1 = not found)
+    private int indexOfId(String id) {
+        for (int i = 0; i < totalCount; i++) {
+            if (messageIds[i].equals(id)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    // d) Every sent or stored message for one recipient
+    public String searchByRecipient(String recipient) {
+        String result = "";
+        for (int i = 0; i < totalCount; i++) {
+            boolean kept = messageFlags[i].equals("Sent") || messageFlags[i].equals("Stored");
+            if (kept && messageRecipients[i].equals(recipient)) {
+                result = result + messageTexts[i] + "\n";
+            }
+        }
+        if (result.equals("")) {
+            return "No messages found for " + recipient + ".";
+        }
+        return result;
+    }
     
 }
