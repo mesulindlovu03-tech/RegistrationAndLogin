@@ -241,4 +241,25 @@ public class MessageDepot {
         }
     }
     
+     // f) Full report of every sent and stored message
+    public String report() {
+        String result = "MESSAGE REPORT\n";
+        int shown = 0;
+        for (int i = 0; i < totalCount; i++) {
+            if (messageFlags[i].equals("Sent") || messageFlags[i].equals("Stored")) {
+                result = result + "----------\n"
+                       + "Message Hash: " + messageHashes[i] + "\n"
+                       + "Message ID: " + messageIds[i] + "\n"
+                       + "Sender: " + messageSenders[i] + "\n"
+                       + "Recipient: " + messageRecipients[i] + "\n"
+                       + "Message: " + messageTexts[i] + "\n"
+                       + "Status: " + messageFlags[i] + "\n";
+                shown++;
+            }
+        }
+        if (shown == 0) {
+            return "No messages to report.";
+        }
+        return result + "----------\nTotal messages: " + shown;
+    }
 }
