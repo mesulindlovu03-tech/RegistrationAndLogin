@@ -47,19 +47,19 @@ public class MessageDepot {
         messageHashes[totalCount] = message.getMessageHash();
         messageSenders[totalCount] = message.getSender();
         messageRecipients[totalCount] = message.getRecipient();
-        messageTexts[totalCount] = message.getText();
+        messageTexts[totalCount] = message.getMessageText();
         messageFlags[totalCount] = message.getFlag();
         totalCount++;
 
         String flag = message.getFlag();
         if (flag.equals("Sent")) {
-            sentMessages[sentCount] = message.getText();
+            sentMessages[sentCount] = message.getMessageText();
             sentCount++;
         } else if (flag.equals("Disregard")) {
-            disregardedMessages[disregardedCount] = message.getText();
+            disregardedMessages[disregardedCount] = message.getMessageText();
             disregardedCount++;
         } else if (flag.equals("Stored")) {
-            storedMessages[storedCount] = message.getText();
+            storedMessages[storedCount] = message.getMessageText();
             storedCount++;
         }
         return "Message recorded.";

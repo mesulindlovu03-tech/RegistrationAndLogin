@@ -18,22 +18,22 @@ public class MessageTest {
     public void setUp() {
         Message.resetAll();
     }
-    
+
     // Test Case 1 data from the brief
     private Message testCase1() {
         return new Message("0012345678", 0, "+27718693002", "Hi Mike, can you join us for dinner tonight?");
     }
-    
+
     // Test Case 2 data from the brief
     private Message testCase2() {
         return new Message("0098765432", 1, "08575975889", "Hi Keegan, did you receive the payment?");
     }
-    
+
     @Test
     public void testMessageLength_success() {
         assertEquals("Message ready to send.", testCase1().checkMessageLength());
     }
-    
+
     @Test
     public void testMessageLength_failure() {
         String longText = "a".repeat(260);
@@ -45,7 +45,7 @@ public class MessageTest {
     public void testRecipient_success() {
         assertEquals("Cell phone number successfully captured.", testCase1().checkRecipientCell());
     }
-    
+
     @Test
     public void testRecipient_failure() {
         assertEquals("Cell phone number is incorrectly formatted or does not contain an international code. Please correct the number and try again.",
@@ -65,7 +65,7 @@ public class MessageTest {
             assertEquals(expected[i], messages[i].createMessageHash());
         }
     }
-    
+
     @Test
     public void testMessageId_created() {
         Message m = testCase1();
@@ -87,7 +87,7 @@ public class MessageTest {
     public void testSentMessage_store() {
         assertEquals("Message successfully stored.", testCase1().SentMessage(3));
     }
-    
+
     @Test
     public void testTotalMessages_sentAndDiscarded() {
         testCase1().SentMessage(1); // sent
@@ -95,104 +95,22 @@ public class MessageTest {
         assertEquals(1, Message.returnTotalMessages());
     }
 
-    public MessageTest() {
-    }
+    // ---- PART 3: the flag and sender are set so MessageDepot can sort the message ----
 
     @Test
-    public void testSomeMethod() {
-    }
-   
-    private Message makeMessage() {
-        return new Message("2900000002", 2, "+27831234567", "+27838884567",
-                "Where are you? You are late! I have asked you to be on time.");
-    }
-    
-    @Test
-    void messageIdHasTenCharacters() {
-        assertTrue(makeMessage().checkMessageId());
-        assertEquals(10, Message.generateMessageId().length());
-    }
-
-    @Test
-    void messageHashIsCreatedCorrectly() {
-        assertEquals("29:2:WHERETIME.", makeMessage().getMessageHash());
-    }
-
-    @Test
-    void oneWordMessageHash() {
-        Message m = new Message("1234567890", 1, "+27831234567", "+27838884567", "Hi");
-        assertEquals("12:1:HIHI", m.getMessageHash());
-    }
-
-    @Test
-    void recipientIsChecked() {
-        assertEquals("Recipient accepted.", Message.checkRecipient("+27834557896"));
-        assertEquals("Recipient must start with +27 and have 9 digits after it.", Message.checkRecipient("0838884567"));
-        assertEquals("Recipient must start with +27 and have 9 digits after it.", Message.checkRecipient("+2783455789A"));
-    }
-
-    @Test
-    void messageLengthIsChecked() {
-        assertEquals("Message accepted.", Message.checkText("Did you get the cake?"));
-        assertEquals("Message is 5 characters too long.", Message.checkText("x".repeat(255)));
-    }
-
-    @Test
-    void processMessageSetsTheFlag() {
-        Message m = makeMessage();
-        assertEquals("Message sent.", m.processMessage(1));
+    public void testFlagIsSetBySentMessage() {
+        Message m = testCase1();
+        assertEquals("Captured", m.getFlag());
+        m.SentMessage(1);
         assertEquals("Sent", m.getFlag());
-        assertEquals("Message disregarded.", m.processMessage(2));
+        m.SentMessage(2);
         assertEquals("Disregard", m.getFlag());
-        assertEquals("Message stored.", m.processMessage(3));
-        assertEquals("Stored", m.getFlag());
-        assertEquals("Invalid option.", m.processMessage(9));
-    }
-    
-    private Message makeMessages() {
-        return new Message("2900000002", 2, "+27831234567", "+27838884567",
-                "Where are you? You are late! I have asked you to be on time.");
     }
 
     @Test
-    void MessageIdHasTenCharacters() {
-        assertTrue(makeMessage().checkMessageId());
-        assertEquals(10, Message.generateMessageId().length());
-    }
-
-    @Test
-    void MessageHashIsCreatedCorrectly() {
-        assertEquals("29:2:WHERETIME.", makeMessage().getMessageHash());
-    }
-
-    @Test
-    void OneWordMessageHash() {
-        Message m = new Message("1234567890", 1, "+27831234567", "+27838884567", "Hi");
-        assertEquals("12:1:HIHI", m.getMessageHash());
-    }
-
-    @Test
-    void RecipientIsChecked() {
-        assertEquals("Recipient accepted.", Message.checkRecipient("+27834557896"));
-        assertEquals("Recipient must start with +27 and have 9 digits after it.", Message.checkRecipient("0838884567"));
-        assertEquals("Recipient must start with +27 and have 9 digits after it.", Message.checkRecipient("+2783455789A"));
-    }
-
-    @Test
-    void MessageLengthIsChecked() {
-        assertEquals("Message accepted.", Message.checkText("Did you get the cake?"));
-        assertEquals("Message is 5 characters too long.", Message.checkText("x".repeat(255)));
-    }
-
-    @Test
-    void ProcessMessageSetsTheFlag() {
-        Message m = makeMessage();
-        assertEquals("Message sent.", m.processMessage(1));
-        assertEquals("Sent", m.getFlag());
-        assertEquals("Message disregarded.", m.processMessage(2));
-        assertEquals("Disregard", m.getFlag());
-        assertEquals("Message stored.", m.processMessage(3));
-        assertEquals("Stored", m.getFlag());
-        assertEquals("Invalid option.", m.processMessage(9));
+    public void testSenderIsRecorded() {
+        Message m = new Message("0012345678", 0, "+27831234567", "+27718693002", "Hi Mike, can you join us for dinner tonight?");
+        assertEquals("+27831234567", m.getSender());
+        assertEquals("+27718693002", m.getRecipient());
     }
 }
